@@ -1,0 +1,12 @@
+
+KAGGLE		
+
+    curl -OL https://ndownloader.figshare.com/files/10082655
+    tar -xzf 10082655
+    rm 10082655
+
+
+TERABYTE
+
+    Follow instructions at https://ailab.criteo.com/download-criteo-1tb-click-logs-dataset/ 
+
