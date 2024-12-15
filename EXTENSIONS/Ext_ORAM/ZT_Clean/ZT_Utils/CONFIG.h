@@ -22,20 +22,7 @@
 
   // The PRM memory limit for Position Map of a ZeroTrace ORAM Instance in bytes.
   // (The recursion levels of the ORAM is paramterized by this value)
-  // #define MEM_POSMAP_LIMIT 128 * 16
-  // #define MEM_POSMAP_LIMIT 1024 * 16
-  // #define MEM_POSMAP_LIMIT 4096 * 4
-  // #define MEM_POSMAP_LIMIT 65536 * 4
-
-  // # DLRM sweep
-  // #define MEM_POSMAP_LIMIT 256 * 4
-  // #define MEM_POSMAP_LIMIT 1024 * 4
-  // #define MEM_POSMAP_LIMIT 4096 * 4
-  // #define MEM_POSMAP_LIMIT 65536 * 4
-  // #define MEM_POSMAP_LIMIT 262144 * 4
-  // #define MEM_POSMAP_LIMIT 20000000 * 4
-
-  #define MEM_POSMAP_LIMIT 65536 * 4 
+  #define MEM_POSMAP_LIMIT 1024*1024*1024
 
   // If turned on, the client (TestCorrectness) will have a detailed microbenchmark
   // of time taken in each of part of the ORAM Access operation  

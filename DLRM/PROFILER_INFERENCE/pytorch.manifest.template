@@ -7,7 +7,7 @@ libos.entrypoint = "{{ entrypoint }}"
 
 loader.log_level = "{{ log_level }}"
 
-loader.env.LD_LIBRARY_PATH = "{{ conda_path }}/lib/:/ZT:/ZT1:/lib:{{ arch_libdir }}:/usr/{{ arch_libdir }}"
+loader.env.LD_LIBRARY_PATH = "{{ conda_path }}/lib/:/ZT:/lib:{{ arch_libdir }}:/usr/{{ arch_libdir }}"
 loader.env.HOME = "{{ env.HOME }}"
 
 # Restrict the maximum number of threads to prevent insufficient memory
@@ -26,8 +26,7 @@ fs.mounts = [
   { path = "/lib", uri = "file:{{ gramine.runtimedir() }}" },
   { path = "{{ arch_libdir }}", uri = "file:{{ arch_libdir }}" },
   { path = "{{ conda_path }}/lib/", uri = "file:{{ conda_path }}/lib/" },
-  { path = "/ZT", uri = "file:/localdata/umar/home/HPCA_ARTIFACT/EXTENSIONS/Ext_ORAM/ZT_Clean/" },
-  { path = "/ZT1", uri = "file:/localdata/umar/home/HPCA_ARTIFACT/EXTENSIONS/Ext_ORAM/ZT_Clean/" },
+  { path = "/ZT", uri = "file:/localdata/umar/home/WORK/GIT-clone/SecEmb_DHE/EXTENSIONS/Ext_ORAM/ZT_Clean/" },
   { path = "/usr/{{ arch_libdir }}", uri = "file:/usr/{{ arch_libdir }}" },
 {% for path in python.get_sys_path(entrypoint) %}
   { path = "{{ path }}", uri = "file:{{ path }}" },
@@ -47,7 +46,7 @@ sgx.trusted_files = [
   "file:{{ gramine.runtimedir() }}/",
   "file:{{ arch_libdir }}/",
   "file:{{ conda_path }}/lib/",
-  "file:/localdata/umar/home/HPCA_ARTIFACT/EXTENSIONS/Ext_ORAM/ZT_Clean/",
+  "file:/localdata/umar/home/WORK/GIT-clone/SecEmb_DHE/EXTENSIONS/Ext_ORAM/ZT_Clean/",
   "file:/usr/{{ arch_libdir }}/",
 {% for path in python.get_sys_path(entrypoint) %}
   "file:{{ path }}{{ '/' if path.is_dir() else '' }}",
@@ -78,8 +77,8 @@ sgx.trusted_files = [
   "file:run_dlrmExt_e64.py",
   "file:run_dlrmExt_e16.py",
 
-  "file:run_hybrid_e64.py",
-  "file:run_hybrid_e16.py",
+  "file:run_hybrid_tera.py",
+  "file:run_hybrid_kaggle.py",
   "file:dhe_dlrm_hybrid.py",
   
 ]
