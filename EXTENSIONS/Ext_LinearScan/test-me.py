@@ -23,7 +23,7 @@ def test_simple():
     
     w = torch.randn((512, embsz))  
 
-    indices = torch.tensor([313, 1, 561], dtype=torch.int64)
+    indices = torch.tensor([313, 1, 511], dtype=torch.int64)
     offsets = torch.tensor([0, 1, 2], dtype=torch.int64)
 
     print(w.dtype)
@@ -36,7 +36,7 @@ def test_simple():
     print('\n\n\n')
     print('orig w       ', w[313,:])
     print('orig w       ', w[1,:])
-    print('orig w       ', w[561,:])
+    print('orig w       ', w[511,:])
 
 test_simple()
 

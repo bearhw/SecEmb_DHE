@@ -87,6 +87,11 @@ struct EmbeddingBag
         printf("zt_id = %d \n", zt_id);
     }
 
+    EmbeddingBag(uint32_t num_embeddings, uint32_t embedding_dim)
+    {
+        EmbeddingBag(num_embeddings, embedding_dim, "sum");
+    }
+
     void setWeights(torch::Tensor inData)
     {
         std::cout << " SETWGHT PRINT  " << m * n << "     " << inData.numel() << " " << inData.sizes() << "\n";
@@ -174,7 +179,6 @@ struct EmbeddingBag
         int IND = indices.sizes()[0];
         float *output = new float[B * m * sizeof(float)];
 
-
         memset(output, 0, B * m * sizeof(float));
         float *tmp_out = new float[m * sizeof(float)];
         for (int i = 0; i < B; i++)
@@ -204,8 +208,8 @@ PYBIND11_MODULE(TORCH_EXTENSION_NAME, m)
 {
     py::class_<EmbeddingBag>(m, "EmbeddingBag")
         .def(py::init<uint32_t, uint32_t, const std::string &>())
+        .def(py::init<uint32_t, uint32_t>())
         .def("setWeights", &EmbeddingBag::setWeights)
         .def("forward", &EmbeddingBag::forward)
         .def("__call__", &EmbeddingBag::forward);
 }
-

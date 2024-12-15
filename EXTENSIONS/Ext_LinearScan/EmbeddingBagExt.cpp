@@ -199,9 +199,5 @@ PYBIND11_MODULE(TORCH_EXTENSION_NAME, m)
         .def("setWeights", &EmbeddingBag::setWeights)
         .def("forward", &EmbeddingBag::forward)
         .def("__call__", &EmbeddingBag::forward)
-        // #ifdef FLAG_LINEAR_SCAN_V9N
-        //         .def("forward_simple", &EmbeddingBag::forward_simple)
-        //         .def_readwrite("weight", &EmbeddingBag::weights);
-        // #endif
         ;
 }
