@@ -3,7 +3,9 @@ import glob
 import os
 
 logdir = '.' + '/'
-
+if not os.path.exists('ParsedCSVs'):
+   os.makedirs('ParsedCSVs')
+   
 # csv header
 header_table    = 'Threads,BatchSize,DenseFeatures,TableCount,EmbSize,NumLookups,NULL,TimeTotal,TimeBottom,TimeEmb,TimeInteract,TimeTop'  
 header_dhe      = 'Threads,BatchSize,DenseFeatures,TableCount,EmbSize,NumLookups,DheK,TimeTotal,TimeBottom,TimeEmb,TimeInteract,TimeTop,TimeEmbHash,TimeEmbMLP'
@@ -20,9 +22,9 @@ files = glob.glob(logdir+'*dlrm*_*.log')
 
 
 # OR THIS
-dhe=1
-table=0
-files = glob.glob(logdir+'*dhe_*.log')
+# dhe=1
+# table=0
+# files = glob.glob(logdir+'*dhe_*.log')
 # files = glob.glob(logdir+'*hybrid*.log')
 
 
