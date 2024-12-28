@@ -25,9 +25,12 @@ SGX further needs Gramine library OS installed (https://gramine.readthedocs.io/e
 
 For Python, we use an Anaconda (www.anaconda.com) based flow.
 First create a new environment `conda create -n pyth310 python=3.10`.
+
 Then install the following packages:
 `pip install torch torchvision torchrec future numpy tqdm onnx pydot scikit-learn tensorboard shapely scipy matplotlib transformers datasets tiktoken wandb tqdm`.
+
 Also install the assembler `conda install anaconda::nasm` and `libssl-dev` or equivalent.
+
 Before running experiments, also install our custom-implemented PyTorch extensions in the `EXTENSIONS` folder.
 
 
