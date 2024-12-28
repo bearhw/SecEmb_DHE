@@ -118,10 +118,53 @@ class DHEBag(nn.Module):
 
         fix_seed(args_dhe["seed"]) # a and b are non-deterministic (here we fix seed for reproducibility)
         
+
+        # print(table_sizes)
+
         # each embedding table is replaced with k hash functions, leading to a total of num_tables * k hash functions.
-        for _ in range(num_tables):
+        for table_i in range(num_tables):
+
+
+            table_sz = table_sizes[table_i]
+
+            if table_sizes[2] == 10131227: # hack to detect kaggle         
+
+                # kaggle
+                if table_sz > 1e6:
+                    this_k = 1024
+                elif table_sz > 1e5:
+                    this_k = 1024-1024/8*1                   
+                elif table_sz > 1e4:
+                    this_k = 1024-1024/8*2
+                elif table_sz > 1e3:
+                    this_k = 1024-1024/8*3
+                elif table_sz > 1e2:
+                    this_k = 1024-1024/8*4
+                elif table_sz > 1e1:
+                    this_k = 1024-1024/8*5
+                else:
+                    this_k = 1024-1024/8*6
+
+            else:
+                # terabyte
+                if table_sz > 1e6:
+                    this_k = 1024
+                elif table_sz > 1e5:
+                    this_k = 1024-1024/8*1                   
+                elif table_sz > 1e4:
+                    this_k = 1024-1024/8*2
+                elif table_sz > 1e3:
+                    this_k = 1024-1024/8*3
+                elif table_sz > 1e2:
+                    this_k = 1024-1024/8*4
+                elif table_sz > 1e1:
+                    this_k = 1024-1024/8*5
+                else:
+                    this_k = 1024-1024/8*6
+
             hash_params_table_i = []
-            for _ in range(args_dhe["k"]):
+            # for _ in range(args_dhe["k"]):
+            for _ in range(int(this_k)):
                 if args_dhe["hash_fn"] == "universal":
                     # Random a, b
                     a = randint(1, p - 1)
@@ -162,8 +205,51 @@ class DHEBag(nn.Module):
         mlp_size  = 0
         mlp_flops = 0
 
+        # print('orig mlp_dims', mlp_dims)
+
         # For each sparse feature, build a DHE Decoder MLP stack
-        for _ in range(num_tables):
+        for table_i in range(num_tables):
+
+            table_sz = table_sizes[table_i]
+
+            if table_sizes[2] == 10131227: # hack to detect kaggle     
+
+                # kaggle
+                if table_sz > 1e6:
+                    mlp_dims = "1024-512-256-16"
+                elif table_sz > 1e5:
+                    mlp_dims = "896-448-224-16"
+                elif table_sz > 1e4:
+                    mlp_dims = "768-384-192-16"
+                elif table_sz > 1e3:
+                    mlp_dims = "640-320-160-16"
+                elif table_sz > 1e2:
+                    mlp_dims = "512-256-128-16"
+                elif table_sz > 1e1:
+                    mlp_dims = "384-192-96-16"
+                else:
+                    mlp_dims = "256-128-64-16"
+
+            else:
+                # terabyte
+                if table_sz > 1e6:
+                    mlp_dims = "1024-512-256-64"
+                elif table_sz > 1e5:
+                    mlp_dims = "896-448-224-64"
+                elif table_sz > 1e4:
+                    mlp_dims = "768-384-192-64"
+                elif table_sz > 1e3:
+                    mlp_dims = "640-320-160-64"
+                elif table_sz > 1e2:
+                    mlp_dims = "512-256-128-64"
+                elif table_sz > 1e1:
+                    mlp_dims = "384-192-96-64"
+                else:
+                    mlp_dims = "256-128-64-64"
+
+
+            mlp_dims = np.fromstring(mlp_dims, dtype=int, sep="-")
+
             # build MLP layer by layer
             layers = nn.ModuleList()
             for i in range(len(mlp_dims) - 1):

@@ -169,12 +169,7 @@ class DLRM(nn.Module):
         
 
     def forward(self, x_dense, x_offsets, x_indices):
-        
-        # mlp_bot_out = self.apply_mlp(x_dense, self.mlp_bot)
-        # embeddings  = self.apply_embedding_tables(x_offsets, x_indices, self.embedding_tables)
-        # fea_int_out = torch.cat([mlp_bot_out] + embeddings, dim=1)
-        # mlp_top_out = self.apply_mlp(fea_int_out, self.mlp_top)
-        
+                
         t0 = time()
         mlp_bot_out = self.apply_mlp(x_dense, self.mlp_bot)
         t1 = time()
@@ -189,6 +184,5 @@ class DLRM(nn.Module):
         shared_vars.times_embed.append(1000*(t2 - t1))
         shared_vars.times_interact.append(1000*(t3 - t2))
         shared_vars.times_top_mlp.append(1000*(t4 - t3))
-
 
         return mlp_top_out

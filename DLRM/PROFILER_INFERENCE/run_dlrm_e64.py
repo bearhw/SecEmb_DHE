@@ -201,10 +201,7 @@ if __name__ == '__main__':
     ###################
     ## sweep parameters
 
-    # batchSize_list =  [1, *range(32,128+1,32)]
     batchSize_list = [ 1, 8, 16, 32, 64, 128 ]
-    # batchSize_list = [ 32 ]
-    # batchSize_list = [ 1 ]
     
     denseFeatures = 13
     args.dense_dim = denseFeatures
@@ -212,63 +209,26 @@ if __name__ == '__main__':
     # adjust table size here as well if needed
     # tableSizes_list=[str(10**table_size_factor)] # if 1 table size only
     tableSizes_list=[str(table_size_rows)] 
-    if 1: 
-        # add more tables
-        # for i in range(5,30+1,5):
-        # for i in [3]:
-        for i in [5]:
-            tbl_str = ""
-            for y in range(1,i+1):
-                    # tbl_str += str(10**table_size_factor) + '-'
-                    tbl_str += str(table_size_rows) + '-'
-            tableSizes_list.append ( tbl_str[:-1] )
+    # if 1: 
+    #     # add more tables
+    #     # for i in range(5,30+1,5):
+    #     # for i in [3]:
+    #     for i in [5]:
+    #         tbl_str = ""
+    #         for y in range(1,i+1):
+    #                 # tbl_str += str(10**table_size_factor) + '-'
+    #                 tbl_str += str(table_size_rows) + '-'
+    #         tableSizes_list.append ( tbl_str[:-1] )
     print('tableSizes_list ', tableSizes_list)        
     print('')
             
-    # embSize_list = range(16,64+1,16)
     embSize_list = [ 64 ]
-    # embSize_list = [ 16 ]
-    # embSize_list = [ 16, 64 ]
 
-    # numLookups_list =  [1,3,5]
-    # numLookups_list =  [1,5,10]
     numLookups_list = [ 1 ]
-    # numLookups_list = [ 1, 5 ]
 
 
     mlp_bot_dims_str =  "13-512-256-64-"
     mlp_top_dims_str =  "512-256-1"
-
-
-
-    # # criteo 
-    # batchSize_list = [ 1, 16, 32, 64 ]
-    # args.dense_dim = 13
-    # numLookups_list = [ 1 ]
-
-    # # kaggle
-    # embSize_list = [ 16 ]
-    # tableSizes_list = ['3-4-10-15-18-24-27-105-305-583-633-1460-2173-3194-5652-5683-12517-14992-93145-142572-286181-2202608-5461306-7046547-8351593-10131227']
-    # mlp_bot_dims_str =  "13-512-256-64-" #-16 
-    # mlp_top_dims_str =  "512-256-1"
-
-    # # terabyte
-    # embSize_list = [ 64 ]
-    # tableSizes_list = ['3-4-10-14-36-61-101-122-970-1442-2208-7112-7378-11156-12420-17217-20134-36084-313829-415421-1333352-7267859-9758201-9946608-9980333-9994222']
-    # mlp_bot_dims_str =  "13-512-256-" #-64
-    # mlp_top_dims_str =  "512-512-256-1"
-
-
-
-
-
-
-
-
-
-
-
-    # for threads vary via env var CUSTOM_THREAD_COUNT
 
 
 
@@ -283,8 +243,6 @@ if __name__ == '__main__':
             for embSize in embSize_list:
                 
                 for numLookups in numLookups_list:
-                         
-                    # for dheK in dheK_list:
                         
                         print('\n\n\n\n\n')
                         print('num_expr',num_expr)

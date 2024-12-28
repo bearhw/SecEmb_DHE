@@ -26,3 +26,8 @@ print('orig', w)
 y = ReLU_Ext.forward(w)
 print("output  ", y, y.shape, y.dtype)
     
+    
+    
+    
+# Note: Use of internal PyTorch ReLU under AVX-512 is likely equivalent to our custom ReLU as the tensor sizes are well-aligned to 64B.
+

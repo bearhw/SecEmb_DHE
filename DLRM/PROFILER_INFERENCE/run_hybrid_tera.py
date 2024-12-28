@@ -59,7 +59,7 @@ def main(args):
 
     # Default: CPU, GPU
     if 1:
-        from DLRM.PROFILER_INFERENCE.dhe_dlrm_hybrid import DLRM_DHE
+        from dhe_dlrm_hybrid import DLRM_DHE
         if args.device == 'cpu':
             device = 'cpu'
             print('Using CPU...')
@@ -222,40 +222,22 @@ if __name__ == '__main__':
     ###################
     ## sweep parameters
 
-    # batchSize_list =  [1, *range(32,128+1,32)]
-    batchSize_list = [ 1, 8, 16, 32, 64, 128 ]
-    # batchSize_list = [ 32 ]
-    # batchSize_list = [ 1 ]
+    # batchSize_list = [ 1, 8, 16, 32, 64, 128 ]
+    batchSize_list = [ 32 ]
     
     denseFeatures = 13
     args.dense_dim = denseFeatures
 
     # adjust table size here as well if needed
     tableSizes_list=['100000'] # if 1 table size only
-    if 0: 
-        # add more tables
-        # for i in range(5,30+1,5):
-        # for i in range(5,15+1,5):
-        # for i in range(5,10+1,5):
-        for i in [10]:
-            tbl_str = ""
-            for y in range(1,i+1):
-                    tbl_str += str(100000) + '-' 
-            tableSizes_list.append ( tbl_str[:-1] )
     print('tableSizes_list ', tableSizes_list)        
     print('')
 
-    # embSize_list = range(16,64+1,16)
     embSize_list = [ 64 ]
 
-    # dheK_list = range(256,3072+1,256)
-    dheK_list = [ 1024, 2048 ]
     dheK_list = [ 1024 ]
 
-    # numLookups_list =  [1,3,5]
-    # numLookups_list =  [1,5,10]
     numLookups_list = [ 1 ]
-    # numLookups_list = [ 1,5 ]
 
 
     mlp_bot_dims_str =  "13-512-256-64-"
@@ -263,22 +245,18 @@ if __name__ == '__main__':
 
 
 
-    # # criteo 
-    # args.dense_dim = 13
-    # numLookups_list = [ 1 ]
-    # dheK_list = [ 1024 ]
 
-    # # kaggle
-    # embSize_list = [ 16 ]
-    # tableSizes_list = ['3-4-10-15-18-24-27-105-305-583-633-1460-2173-3194-5652-5683-12517-14992-93145-142572-286181-2202608-5461306-7046547-8351593-10131227']
-    # mlp_bot_dims_str =  "13-512-256-64-" #-16 
-    # mlp_top_dims_str =  "512-256-1"
 
     # # terabyte
     embSize_list = [ 64 ]
     tableSizes_list = ['3-4-10-14-36-61-101-122-970-1442-2208-7112-7378-11156-12420-17217-20134-36084-313829-415421-1333352-7267859-9758201-9946608-9980333-9994222']
     mlp_bot_dims_str =  "13-512-256-" #-64
     mlp_top_dims_str =  "512-512-256-1"
+
+
+
+
+
 
 
 
@@ -317,7 +295,6 @@ if __name__ == '__main__':
                         args.mlp_bot_dims = mlp_bot_dims_str+str(embSize)    
                         args.mlp_top_dims = mlp_top_dims_str
                         args.dhe_k = dheK
-                       # args.dhe_mlp_dims = str(dheK)+"-128-"+str(embSize)
                         args.dhe_mlp_dims = str(dheK)+"-512-256-"+str(embSize)
                         args.num_lookups = numLookups
                         # print(args)

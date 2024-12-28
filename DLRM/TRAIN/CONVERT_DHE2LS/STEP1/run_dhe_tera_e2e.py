@@ -137,7 +137,6 @@ def main(args):
     # val = 0
     # out = model.apply_dhe_stacks(torch.ones(26,1),torch.ones(26,1)*val)
         
-    # process = psutil.Process()
     
     
     # list_of_output_lists.append(out)
@@ -148,9 +147,6 @@ def main(args):
     table_ctr = 0
     
     for tableSize in tableSizes_list.split('-'):
-    #     print(tableSize)
-    # for tableSize in ['1101','2343','100000']:
-    # for tableSize in ['128','133']:
         
         tableSize = int(tableSize)
         
@@ -205,104 +201,6 @@ def main(args):
     
     
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-
-    # # Training
-    # if args.train == True:
-    #     if args.device == 'cpu' or args.device == 'gpu':
-    #         model.train()
-    #         timing_vector     = []
-    #         timing_vector_fwd = []
-    #         timing_vector_bwd = []
-    #         for epoch in range(args.num_epochs):
-    #             print('Epoch {} ===================='.format(epoch))
-    #             for i, inputBatch in enumerate(dataloader):
-    #                 x_dense, x_offsets, x_indices, y = inputBatch
-    #                 t0      = time()
-    #                 outputs = model(x_dense.to(device), x_offsets.to(device), x_indices.to(device))
-    #                 t1      = time()
-    #                 loss    = model.loss_fn(outputs, y.to(device))
-    #                 optimizer.zero_grad()
-    #                 loss.backward()
-    #                 optimizer.step()
-    #                 t2 = time()
-    #                 timing_vector.append(1000*(t2 - t0))
-    #                 timing_vector_fwd.append(1000*(t1 - t0))
-    #                 timing_vector_bwd.append(1000*(t2 - t1))
-    #                 if (i%args.print_freq == 0):
-    #                     print('Epoch {} Batch {}: {:.3f} ({:.3f}, {:.3f}) ms'.format(
-    #                         epoch, i, timing_vector[-1], timing_vector_fwd[-1], timing_vector_bwd[-1]))
-    #         print('\nTotal Training Time (Stable): {:.3f} ms/it'.format(np.median(timing_vector)*len(timing_vector)))
-    #         print('Total Training Time: {:.3f} ms/it'.format(np.sum(timing_vector)))
-    #         print('Median Training Time: {:.3f} ms/it'.format(np.median(timing_vector)))
-    #         print('Mean Training Time: {:.3f} ms/it\n'.format(np.mean(timing_vector)))
-
-    #         print('\nTotal FWD Time (Stable): {:.3f} ms/it'.format(np.median(timing_vector_fwd)*len(timing_vector_fwd)))
-    #         print('Total FWD Time: {:.3f} ms/it'.format(np.sum(timing_vector_fwd)))
-    #         print('Median FWD Time: {:.3f} ms/it'.format(np.median(timing_vector_fwd)))
-    #         print('Mean FWD Time: {:.3f} ms/it\n'.format(np.mean(timing_vector_fwd)))
-
-    #         print('\nTotal BWD Time (Stable): {:.3f} ms/it'.format(np.median(timing_vector_bwd)*len(timing_vector_bwd)))
-    #         print('Total BWD Time: {:.3f} ms/it'.format(np.sum(timing_vector_bwd)))
-    #         print('Median BWD Time: {:.3f} ms/it'.format(np.median(timing_vector_bwd)))
-    #         print('Mean BWD Time: {:.3f} ms/it\n'.format(np.mean(timing_vector_bwd)))
-
-
-    # # Inference
-    # if args.inference == True:
-    #     if args.device == 'cpu' or args.device == 'gpu':
-    #         model.eval()
-    #         timing_vector = []
-    #         for epoch in range(args.num_epochs):
-    #             print('Epoch {} ===================='.format(epoch))
-    #             for i, inputBatch in enumerate(dataloader):
-    #                 x_dense, x_offsets, x_indices, _ = inputBatch
-    #                 t0      = time()
-    #                 outputs = model(x_dense.to(device), x_offsets.to(device), x_indices.to(device))
-    #                 t1      = time()
-    #                 timing_vector.append(1000*(t1 - t0))
-    #                 if (i%args.print_freq == 0):
-    #                     print('Epoch {} Batch {}: {:.3f} ms'.format(epoch, i, timing_vector[-1]))
-                        
-    #         # print(timing_vector)
-    #         timing_vector.pop(0)
-            
-    #         print('\nTotal Inference Time (Stable): {:.3f} ms/it'.format(np.median(timing_vector)*len(timing_vector)))
-    #         print('Total Inference Time: {:.3f} ms/it'.format(np.sum(timing_vector)))
-    #         print('Median Inference Time: {:.3f} ms/it'.format(np.median(timing_vector)))
-    #         print('Mean Inference Time: {:.3f} ms/it\n'.format(np.mean(timing_vector)))
-
-    #         shared_vars.times_bot_mlp.pop(0)
-    #         shared_vars.times_embed.pop(0)
-    #         shared_vars.times_interact.pop(0)
-    #         shared_vars.times_top_mlp.pop(0)
-    #         print('Mean Inference Time for Bottom MLP:  {:.3f} ms/it'.format(np.mean(shared_vars.times_bot_mlp)))
-    #         print('Mean Inference Time for Embedding:   {:.3f} ms/it'.format(np.mean(shared_vars.times_embed)))
-    #         print('Mean Inference Time for Interaction: {:.3f} ms/it'.format(np.mean(shared_vars.times_interact)))
-    #         print('Mean Inference Time for Top MLP:     {:.3f} ms/it'.format(np.mean(shared_vars.times_top_mlp)))
-    #         print('Total:                               {:.3f} ms/it'.format(np.mean(shared_vars.times_bot_mlp)+np.mean(shared_vars.times_embed)+np.mean(shared_vars.times_interact)+np.mean(shared_vars.times_top_mlp)))
-    #         print('')
-
-    #         print('Mean Inference Time for Embedding Hash:   {:.3f} ms/it'.format(np.mean(shared_vars.times_embed_dhe_hash)))
-    #         print('Mean Inference Time for Embedding MLP:    {:.3f} ms/it'.format(np.mean(shared_vars.times_embed_dhe_mlp)))
-    #         print('Total:                                    {:.3f} ms/it'.format(np.mean(shared_vars.times_embed_dhe_hash)+np.mean(shared_vars.times_embed_dhe_mlp)))
-    #         print('')
-            
-    #         print('Result:')
-    #         res_str = ' {:.4f}, {:.4f}, {:.4f}, {:.4f}, {:.4f}, {:.4f}, {:.4f} \n'.format(np.mean(timing_vector), np.mean(shared_vars.times_bot_mlp), np.mean(shared_vars.times_embed), np.mean(shared_vars.times_interact), np.mean(shared_vars.times_top_mlp),np.mean(shared_vars.times_embed_dhe_hash),np.mean(shared_vars.times_embed_dhe_mlp))
-    #         res_str = str(torch.get_num_threads()) + ',' + str(args.batch_size) +  ',' + str(args.dense_dim) + ',' + str(len(args.table_sizes)) + ',' + str(args.emb_dim) + ',' + str(args.num_lookups) + ',' + str(args.dhe_k) + ',' + '     ' + res_str
-    #         result_str += res_str 
-    #         print('')
-
-    
 
 
 if __name__ == '__main__':
@@ -321,19 +219,15 @@ if __name__ == '__main__':
     # main(args)    
     # reset 
     result_str = ""
-    shared_vars.times_bot_mlp = []
-    shared_vars.times_embed = []
-    shared_vars.times_interact = []
-    shared_vars.times_top_mlp = []
-    shared_vars.times_embed_dhe_hash = []
-    shared_vars.times_embed_dhe_mlp = []
+    # shared_vars.times_bot_mlp = []
+    # shared_vars.times_embed = []
+    # shared_vars.times_interact = []
+    # shared_vars.times_top_mlp = []
+    # shared_vars.times_embed_dhe_hash = []
+    # shared_vars.times_embed_dhe_mlp = []
 
     ###################
-    ## sweep parameters
 
-    # batchSize_list =  [1, *range(32,128+1,32)]
-    # batchSize_list = [ 1, 8, 16, 32, 64, 128 ]
-    # # batchSize_list = [ 32 ]
     batchSize_list = [ 1 ]
     
     denseFeatures = 13
@@ -341,54 +235,20 @@ if __name__ == '__main__':
 
     # adjust table size here as well if needed
     tableSizes_list=['100000'] # if 1 table size only
-    if 1: 
-        # add more tables
-        # for i in range(5,30+1,5):
-        # for i in range(5,15+1,5):
-        # for i in range(5,10+1,5):
-        # for i in [10]:
-        for i in [3]:
-        # for i in [5]:
-            tbl_str = ""
-            for y in range(1,i+1):
-                    tbl_str += str(100000) + '-' 
-            tableSizes_list.append ( tbl_str[:-1] )
     print('tableSizes_list ', tableSizes_list)        
     print('')
 
-    # embSize_list = range(16,64+1,16)
-    # embSize_list = [ 16, 64 ]
     embSize_list = [ 64 ]
-    # embSize_list = [ 16 ]
 
-    # dheK_list = range(256,3072+1,256)
-    # dheK_list = [ 1024, 2048 ]
-    # dheK_list = [ 1024, 2048, 3072, 4096, 5120, 6144 ]
-    # dheK_list = [ 6144 ]
     dheK_list = [ 1024 ]
 
-    # numLookups_list =  [1,3,5]
-    # numLookups_list =  [1,5,10]
     numLookups_list = [ 1 ]
-    # numLookups_list = [ 1,5 ]
 
 
     mlp_bot_dims_str =  "13-512-256-64-"
     mlp_top_dims_str =  "512-256-1"
 
 
-
-    # # criteo 
-    # batchSize_list = [ 1, 16, 32, 64 ]
-    # args.dense_dim = 13
-    # numLookups_list = [ 1 ]
-    # dheK_list = [ 1024 ]
-
-    # # kaggle
-    # embSize_list = [ 16 ]
-    # tableSizes_list = ['3-4-10-15-18-24-27-105-305-583-633-1460-2173-3194-5652-5683-12517-14992-93145-142572-286181-2202608-5461306-7046547-8351593-10131227']
-    # mlp_bot_dims_str =  "13-512-256-64-" #-16 
-    # mlp_top_dims_str =  "512-256-1"
 
     # # terabyte
     embSize_list = [ 64 ]
@@ -397,26 +257,6 @@ if __name__ == '__main__':
     mlp_top_dims_str =  "512-512-256-1"
 
 
-
-    # randomize
-    if 0:
-        x = [int(i) for i in tableSizes_list[0].split('-')]
-        import random
-        random.seed()
-        random.shuffle(x)
-        x = [str(i) for i in x]
-        tableSizes_list = ['-'.join(x)]
-
-
-
-
-
-
-
-
-
-
-    # for threads vary via env var CUSTOM_THREAD_COUNT
 
 
 
@@ -447,7 +287,6 @@ if __name__ == '__main__':
                         args.mlp_bot_dims = mlp_bot_dims_str+str(embSize)    
                         args.mlp_top_dims = mlp_top_dims_str
                         args.dhe_k = dheK
-                        # args.dhe_mlp_dims = str(dheK)+"-128-"+str(embSize)
                         args.dhe_mlp_dims = str(dheK)+"-512-256-"+str(embSize)
                         args.num_lookups = numLookups
                         # print(args)
@@ -463,19 +302,3 @@ if __name__ == '__main__':
                         shared_vars.times_embed_dhe_mlp = []
 
 
-    print('')
-    print('FINAL')
-    print(result_str)
- 
-
-
-    print('')    
-    print('num_expr ', num_expr)    
-    print('')
-
-
-    print('tableSizes_list ', tableSizes_list)        
-    print('')
-
-    print("the number of cpu threads: {} ".format(torch.get_num_threads()))
-    print('')

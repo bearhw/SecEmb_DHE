@@ -1,21 +1,22 @@
 import torch
 
-# terabyte or kaggle
-kaggle=1
+# Choose one; terabyte or kaggle
+kaggle=0
+# kaggle=1
 
 
 ####  load dhe params
 if kaggle:
-    x = torch.load('kaggle_dhe_uniform.pt',map_location=torch.device('cpu'))
+    x = torch.load('../../TRAINED_MODELS/kaggle_dhe_uniform.pt',map_location=torch.device('cpu'))
 else:
-    x = torch.load('terabyte_dhe_uniform.pt',map_location=torch.device('cpu'))
+    x = torch.load('../../TRAINED_MODELS/terabyte_dhe_uniform.pt',map_location=torch.device('cpu'))
 
 
 #### any sample table file for copying into
 if kaggle:
-    y = torch.load('kaggle_table.pt',map_location=torch.device('cpu'))
+    y = torch.load('../../TRAINED_MODELS/kaggle_table.pt',map_location=torch.device('cpu'))
 else:
-    y = torch.load('terabyte_table.pt',map_location=torch.device('cpu'))
+    y = torch.load('../../TRAINED_MODELS/terabyte_table.pt',map_location=torch.device('cpu'))
 
 
 # for key in x['state_dict']:
@@ -36,8 +37,7 @@ print('\n')
 
 # copying cached DHE output
 
-if True:
-  for i in range(26):
+for i in range(26):
     
     if kaggle:
         path = f'../STEP1/CACHED_TABLES/kaggle_tbl{i}.pt'
@@ -55,8 +55,7 @@ if True:
 
 
 print('saving')
-torch.save(y, "OUTPUT_MODELS/cached_kaggle.pt")
-# torch.save(y, "OUTPUT_MODELS/cached_terabyte.pt")
-
-# 
-
+if kaggle:
+    torch.save(y, "OUTPUT_MODELS/cached_kaggle.pt")
+else:
+    torch.save(y, "OUTPUT_MODELS/cached_terabyte.pt")

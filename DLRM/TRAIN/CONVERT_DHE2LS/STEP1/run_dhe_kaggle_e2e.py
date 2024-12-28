@@ -14,8 +14,6 @@ os.environ["VECLIB_MAXIMUM_THREADS"] = thread_count
 os.environ["NUMEXPR_NUM_THREADS"] = thread_count
 
 ######################
-import psutil
-######################
 
 import numpy as np
 
@@ -107,6 +105,10 @@ def main(args):
 
     print(model)
     
+    
+    
+    
+    
     print("Model's state_dict:")
     for param_tensor in model.state_dict():
         print(param_tensor, "\t", model.state_dict()[param_tensor].size())
@@ -135,7 +137,6 @@ def main(args):
     # val = 0
     # out = model.apply_dhe_stacks(torch.ones(26,1),torch.ones(26,1)*val)
         
-    # process = psutil.Process()
     
     
     # list_of_output_lists.append(out)
@@ -146,9 +147,6 @@ def main(args):
     table_ctr = 0
     
     for tableSize in tableSizes_list.split('-'):
-    #     print(tableSize)
-    # for tableSize in ['1101','2343','100000']:
-    # for tableSize in ['1460','583']:
         
         tableSize = int(tableSize)
         
@@ -199,18 +197,10 @@ def main(args):
             
     exit()
 
-
-
-
-
-
-
-
-
-
-
-
-
+    
+    
+    
+    
 
 
 if __name__ == '__main__':
@@ -237,11 +227,7 @@ if __name__ == '__main__':
     # shared_vars.times_embed_dhe_mlp = []
 
     ###################
-    ## sweep parameters
 
-    # batchSize_list =  [1, *range(32,128+1,32)]
-    # batchSize_list = [ 1, 8, 16, 32, 64, 128 ]
-    # batchSize_list = [ 32 ]
     batchSize_list = [ 1 ]
     
     denseFeatures = 13
@@ -249,36 +235,14 @@ if __name__ == '__main__':
 
     # adjust table size here as well if needed
     tableSizes_list=['100000'] # if 1 table size only
-    if 1: 
-        # add more tables
-        # for i in range(5,30+1,5):
-        # for i in range(5,15+1,5):
-        # for i in range(5,10+1,5):
-        # for i in [10]:
-        for i in [3]:
-        # for i in [5]:
-            tbl_str = ""
-            for y in range(1,i+1):
-                    tbl_str += str(100000) + '-' 
-            tableSizes_list.append ( tbl_str[:-1] )
     print('tableSizes_list ', tableSizes_list)        
     print('')
 
-    # embSize_list = range(16,64+1,16)
-    # embSize_list = [ 16, 64 ]
-    # embSize_list = [ 64 ]
     embSize_list = [ 16 ]
 
-    # dheK_list = range(256,3072+1,256)
-    # dheK_list = [ 1024, 2048 ]
-    # dheK_list = [ 1024, 2048, 3072, 4096, 5120, 6144 ]
-    # dheK_list = [ 3072 ]
     dheK_list = [ 1024 ]
 
-    # numLookups_list =  [1,3,5]
-    # numLookups_list =  [1,5,10]
     numLookups_list = [ 1 ]
-    # numLookups_list = [ 1,5 ]
 
 
     mlp_bot_dims_str =  "13-512-256-64-"
@@ -286,46 +250,12 @@ if __name__ == '__main__':
 
 
 
-    # # criteo 
-    # batchSize_list = [ 1, 16, 32, 64 ]
-    # args.dense_dim = 13
-    # numLookups_list = [ 1 ]
-    # dheK_list = [ 1024 ]
-
     # # kaggle
     embSize_list = [ 16 ]
-    # tableSizes_list = ['3-4-10-15-18-24-27-105-305-583-633-1460-2173-3194-5652-5683-12517-14992-93145-142572-286181-2202608-5461306-7046547-8351593-10131227']
     tableSizes_list = ['1460-583-10131227-2202608-305-24-12517-633-3-93145-5683-8351593-3194-27-14992-5461306-10-5652-2173-4-7046547-18-15-286181-105-142572']
     mlp_bot_dims_str =  "13-512-256-64-" #-16 
     mlp_top_dims_str =  "512-256-1"
 
-    # # terabyte
-    # embSize_list = [ 64 ]
-    # tableSizes_list = ['3-4-10-14-36-61-101-122-970-1442-2208-7112-7378-11156-12420-17217-20134-36084-313829-415421-1333352-7267859-9758201-9946608-9980333-9994222']
-    # mlp_bot_dims_str =  "13-512-256-" #-64
-    # mlp_top_dims_str =  "512-512-256-1"
-
-
-    # randomize
-    if 0:
-        x = [int(i) for i in tableSizes_list[0].split('-')]
-        import random
-        random.seed()
-        random.shuffle(x)
-        x = [str(i) for i in x]
-        tableSizes_list = ['-'.join(x)]
-
-
-
-
-
-
-
-
-
-
-
-    # for threads vary via env var CUSTOM_THREAD_COUNT
 
 
 
@@ -356,7 +286,6 @@ if __name__ == '__main__':
                         args.mlp_bot_dims = mlp_bot_dims_str+str(embSize)    
                         args.mlp_top_dims = mlp_top_dims_str
                         args.dhe_k = dheK
-                       # args.dhe_mlp_dims = str(dheK)+"-128-"+str(embSize)
                         args.dhe_mlp_dims = str(dheK)+"-512-256-"+str(embSize)
                         args.num_lookups = numLookups
                         # print(args)
@@ -372,19 +301,3 @@ if __name__ == '__main__':
                         shared_vars.times_embed_dhe_mlp = []
 
 
-    print('')
-    print('FINAL')
-    print(result_str)
- 
-
-
-    print('')    
-    print('num_expr ', num_expr)    
-    print('')
-
-
-    print('tableSizes_list ', tableSizes_list)        
-    print('')
-
-    print("the number of cpu threads: {} ".format(torch.get_num_threads()))
-    print('')

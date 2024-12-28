@@ -163,18 +163,5 @@ class DHE(nn.Module):
         shared_vars.times_embed.append(1000*(t2 - t1))
         shared_vars.times_interact.append(1000*(t3 - t2))
         shared_vars.times_top_mlp.append(1000*(t4 - t3))
-
-
-        # t0 = time()
-        # mlp_bot_out = self.apply_mlp(x_dense, self.mlp_bot)
-        # # t1 = time()
-        # embeddings  = self.apply_dhe_stacks(x_offsets, x_indices)
-        # # t2 = time()
-        # fea_int_out = torch.cat([mlp_bot_out] + embeddings, dim=1)
-        # # t3 = time()
-        # mlp_top_out = self.apply_mlp(fea_int_out, self.mlp_top)
-        # t4 = time()
-        
-        # shared_vars.times_top_mlp.append(1000*(t4 - t0))
         
         return mlp_top_out

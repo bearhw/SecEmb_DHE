@@ -62,16 +62,13 @@ struct EmbeddingBag
         mode = mode_;
         fflush(stdout);
 
-        // MAX_BLOCKS = 1000;
-        // DATA_SIZE = 32;
-
         MAX_BLOCKS = num_embeddings;
         DATA_SIZE = embedding_dim * sizeof(float);
         OBLIVIOUS_FLAG = 1;
         RECURSION_DATA_SIZE = 64;
 
 #ifdef FLAG_ZT_PO
-        ORAM_TYPE = 0;
+        ORAM_TYPE = 0; // path
         STASH_SIZE = 150;
         Z = 4;
 #endif
@@ -85,6 +82,7 @@ struct EmbeddingBag
         printf("Params = STASH_SIZE %d Z %d\n", STASH_SIZE, Z);
         zt_id = ZT_New(MAX_BLOCKS, DATA_SIZE, STASH_SIZE, OBLIVIOUS_FLAG, RECURSION_DATA_SIZE, ORAM_TYPE, Z);
         printf("zt_id = %d \n", zt_id);
+        fflush(stdout);
     }
 
     EmbeddingBag(uint32_t num_embeddings, uint32_t embedding_dim)
@@ -199,6 +197,7 @@ struct EmbeddingBag
             }
         }
 
+        fflush(stdout);
         return torch::from_blob(output, {B, m});
     }
 };

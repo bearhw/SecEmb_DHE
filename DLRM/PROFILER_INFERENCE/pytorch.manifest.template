@@ -26,7 +26,7 @@ fs.mounts = [
   { path = "/lib", uri = "file:{{ gramine.runtimedir() }}" },
   { path = "{{ arch_libdir }}", uri = "file:{{ arch_libdir }}" },
   { path = "{{ conda_path }}/lib/", uri = "file:{{ conda_path }}/lib/" },
-  { path = "/ZT", uri = "file:/localdata/umar/home/WORK/GIT-clone/SecEmb_DHE/EXTENSIONS/Ext_ORAM/ZT_Clean/" },
+  { path = "/ZT", uri = "file:/localdata/umar/home/ARTIFACT/SecEmb_DHE/EXTENSIONS/Ext_ORAM/ZT_Clean/" },
   { path = "/usr/{{ arch_libdir }}", uri = "file:/usr/{{ arch_libdir }}" },
 {% for path in python.get_sys_path(entrypoint) %}
   { path = "{{ path }}", uri = "file:{{ path }}" },
@@ -46,7 +46,7 @@ sgx.trusted_files = [
   "file:{{ gramine.runtimedir() }}/",
   "file:{{ arch_libdir }}/",
   "file:{{ conda_path }}/lib/",
-  "file:/localdata/umar/home/WORK/GIT-clone/SecEmb_DHE/EXTENSIONS/Ext_ORAM/ZT_Clean/",
+  "file:/localdata/umar/home/ARTIFACT/SecEmb_DHE/EXTENSIONS/Ext_ORAM/ZT_Clean/",
   "file:/usr/{{ arch_libdir }}/",
 {% for path in python.get_sys_path(entrypoint) %}
   "file:{{ path }}{{ '/' if path.is_dir() else '' }}",
@@ -79,8 +79,7 @@ sgx.trusted_files = [
 
   "file:run_hybrid_tera.py",
   "file:run_hybrid_kaggle.py",
-  "file:dhe_dlrm_hybrid.py",
-  
+  "file:dhe_dlrm_hybrid.py", 
 ]
 
 # sgx.allowed_files = [
@@ -105,5 +104,4 @@ sgx.nonpie_binary =  true
 
 sgx.require_avx    = true
 sgx.require_avx512 = true
-
 
