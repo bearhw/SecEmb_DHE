@@ -2,8 +2,8 @@
 conda activate pyth310
 
 
-cmd="gramine-sgx  ./pytorch"
-cmd="python"
+cmd="gramine-sgx  ./pytorch" # SGX
+cmd="python" # not SGX
 
 
 
