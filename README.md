@@ -3,6 +3,8 @@
 
 Public Artifact for the HPCA'25 paper "Efficient Memory Side-Channel Protection for Embedding Generation in Machine Learning".
 
+---
+
 
 ### SETUP INSTRUCTIONS
 
@@ -19,6 +21,7 @@ Then install the following packages:
 
 Also install the assembler `conda install anaconda::nasm` and `libssl-dev` or equivalent.
 
+---
 
 ### RUNNING INSTRUCTIONS
 
@@ -27,6 +30,8 @@ First, inside the dir `EXTENSIONS/Ext_ORAM/ZT_Clean`, run `make` and build our m
 Then inside each sub-folder `EXTENSIONS/Ext_*`, run `source cmd-setup.sh` to install the extensions (into the conda environment).
 Note: where the `ZT_Clean` ZeroTrace is built, the absolute fixed paths to ZT_Clean need to be edit in `DLRM/PROFILER_INFERENCE/pytorch.manifest.template` and
 `EXTENSIONS/Ext_ORAM/Ext_PyTorch/setup.py`.
+
+---
 
 #### DLRM
 
@@ -67,7 +72,8 @@ This will again output logs in `DLRM/PROFILER_INFERENCE/RESULTS_OUTPUT` which ca
 Also, inference can be run either inside/outside SGX by editing the `cmd=` inside the script.
 
 
- 
+---
+
 
 
 #### LLM
@@ -93,6 +99,7 @@ The trained models can be prompted for generation using the `launch_sample.sh` s
 
 
 
+---
 
 
 #### COMMON
