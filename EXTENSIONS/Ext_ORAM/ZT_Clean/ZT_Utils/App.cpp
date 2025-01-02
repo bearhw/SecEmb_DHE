@@ -111,6 +111,7 @@ uint8_t createNewORAMInstance(uint32_t instance_id, uint32_t max_blocks, uint32_
     #endif
     
     new_poram_instance->Create(instance_id, oram_type, pZ, max_blocks, data_size, stash_size, oblivious_flag, recursion_data_size, recursion_levels);
+    printf("Created PathORAM\n");
     #ifdef DEBUG_ZT_ENCLAVE
 	    printf("In createNewORAMInstance, after Create\n");	
     #endif			

@@ -85,9 +85,9 @@ struct EmbeddingBag
         fflush(stdout);
     }
 
-    EmbeddingBag(uint32_t num_embeddings, uint32_t embedding_dim)
+    EmbeddingBag(uint32_t num_embeddings, uint32_t embedding_dim) : EmbeddingBag(num_embeddings, embedding_dim, "sum")
     {
-        EmbeddingBag(num_embeddings, embedding_dim, "sum");
+        
     }
 
     void setWeights(torch::Tensor inData)
@@ -160,7 +160,6 @@ struct EmbeddingBag
 
     torch::Tensor forward(torch::Tensor indices, torch::Tensor offsets)
     {
-
         uint32_t request_size, response_size;
         request_size = ID_SIZE_IN_BYTES + DATA_SIZE;
         response_size = DATA_SIZE;
@@ -205,7 +204,7 @@ struct EmbeddingBag
 namespace py = pybind11;
 PYBIND11_MODULE(TORCH_EXTENSION_NAME, m)
 {
-    py::class_<EmbeddingBag>(m, "EmbeddingBag")
+    py::class_<EmbeddingBag>(m, "EmbeddingBag", py::module_local())
         .def(py::init<uint32_t, uint32_t, const std::string &>())
         .def(py::init<uint32_t, uint32_t>())
         .def("setWeights", &EmbeddingBag::setWeights)

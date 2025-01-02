@@ -19,7 +19,7 @@ from EmbeddingBagExt_LinearScan import EmbeddingBag
 def test_simple():
         
     embsz = 64
-    emb_1 = EmbeddingBag(512, embsz, "sum")
+    emb_1 = EmbeddingBag(512, embsz)
     
     w = torch.randn((512, embsz))  
 

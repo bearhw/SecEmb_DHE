@@ -6,7 +6,7 @@
 
 
 
-#ifdef FLAG_RELU_V1
+#ifdef FLAG_RELU_NONSECURE
 
 // non-secure base ver
 torch::Tensor ReLU_forward(torch::Tensor input_tensor)
@@ -47,7 +47,7 @@ static inline float cmov(uint32_t pred, float val1, float val2)
     return result;
 }
 
-#ifdef FLAG_RELU_V2
+#ifdef FLAG_RELU_OBLIVIOUS
 
 torch::Tensor ReLU_forward(torch::Tensor input_tensor)
 {
@@ -67,7 +67,7 @@ torch::Tensor ReLU_forward(torch::Tensor input_tensor)
         // vec blocks
         for (uint32_t e = 0; e < vec_len_avx512; e++)
         {
-            __m512 z = _mm512_load_ps((input_tensor.data_ptr<float>() + b * L) + e * 16);
+            __m512 z = _mm512_load_ps((input_tensor.data_ptr<float>() + b * L) + e * 16);           // aligned      why
             __m512 all_zeros = _mm512_setzero_ps();
             __m512 res = _mm512_max_ps(z, all_zeros);
             _mm512_store_ps(output + b * L + (e * 16), res);
@@ -82,6 +82,10 @@ torch::Tensor ReLU_forward(torch::Tensor input_tensor)
             output[b * L + i] = res;
         }
     }
+
+    // void* _mm_malloc (size_t size, size_t align )
+    // void _mm_free (void *p)
+
     return torch::from_blob(output, {B, L});
 }
 

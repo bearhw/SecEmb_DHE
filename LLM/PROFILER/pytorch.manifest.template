@@ -1,0 +1,78 @@
+# SPDX-License-Identifier: LGPL-3.0-or-later 
+
+# PyTorch manifest template
+
+loader.entrypoint = "file:{{ gramine.libos }}"
+libos.entrypoint = "{{ entrypoint }}"
+
+loader.log_level = "{{ log_level }}"
+
+loader.env.LD_LIBRARY_PATH = "{{ conda_path }}/lib/:/ZT:/lib:{{ arch_libdir }}:/usr/{{ arch_libdir }}"
+loader.env.HOME = "{{ env.HOME }}"
+
+# Restrict the maximum number of threads to prevent insufficient memory
+# issue, observed on CentOS/RHEL.
+# loader.env.OMP_NUM_THREADS = "1"
+
+# loader.insecure__use_host_env = true
+loader.env.CUSTOM_THREAD_COUNT = { passthrough = true }
+
+loader.insecure__use_cmdline_argv = true
+
+fs.mounts = [
+  { path = "{{ entrypoint }}", uri = "file:{{ entrypoint }}" },
+  { path = "/lib", uri = "file:{{ gramine.runtimedir() }}" },
+  { path = "{{ arch_libdir }}", uri = "file:{{ arch_libdir }}" },
+  { path = "{{ conda_path }}/lib/", uri = "file:{{ conda_path }}/lib/" },
+  { path = "/ZT", uri = "file:/localdata/umar/TEMP/GIT_CLONE-v2/SecEmb_DHE/EXTENSIONS/Ext_ORAM/ZT_Clean/" },
+  { path = "/usr/{{ arch_libdir }}", uri = "file:/usr/{{ arch_libdir }}" },
+{% for path in python.get_sys_path(entrypoint) %}
+  { path = "{{ path }}", uri = "file:{{ path }}" },
+{% endfor %}
+
+  { type = "tmpfs", path = "/tmp" },
+]
+
+# sgx.enclave_size = "64G"
+sgx.enclave_size = "64G"
+sgx.max_threads = 64
+sgx.edmm_enable = {{ 'true' if env.get('EDMM', '0') == '1' else 'false' }}
+
+sgx.trusted_files = [
+  "file:{{ entrypoint }}",
+  "file:{{ gramine.libos }}",
+  "file:{{ gramine.runtimedir() }}/",
+  "file:{{ arch_libdir }}/",
+  "file:{{ conda_path }}/lib/",
+  "file:/localdata/umar/TEMP/GIT_CLONE-v2/SecEmb_DHE/EXTENSIONS/Ext_ORAM/ZT_Clean/",
+  "file:/usr/{{ arch_libdir }}/",
+{% for path in python.get_sys_path(entrypoint) %}
+  "file:{{ path }}{{ '/' if path.is_dir() else '' }}",
+{% endfor %}
+
+  "file:profiler.py",
+  "file:emb_wrappers.py",
+]
+
+sgx.allowed_files = [
+  "file:RESULTS_OUTPUT/",
+]
+
+# Gramine optionally provides patched OpenMP runtime library that runs faster inside SGX enclaves
+# (add `-Dlibgomp=enabled` when configuring the build). Uncomment the line below to use the patched
+# library. PyTorch's SGX perf overhead decreases on some workloads from 25% to 8% with this patched
+# library. Note that we need to preload the library because PyTorch's distribution renames
+# libgomp.so to smth like libgomp-7c85b1e2.so.1, so it's not just a matter of searching in the
+# Gramine's Runtime path first, but a matter of intercepting OpenMP functions.
+
+# loader.env.LD_PRELOAD = "/lib/libgomp.so.1"
+
+
+
+sgx.nonpie_binary =  true
+
+# sgx.enable_stats = true
+
+
+sgx.require_avx    = true
+sgx.require_avx512 = true

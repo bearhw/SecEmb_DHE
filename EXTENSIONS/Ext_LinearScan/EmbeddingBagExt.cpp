@@ -109,19 +109,14 @@ struct EmbeddingBag
 
         table_weights = new float[m * n * sizeof(float)];
         weights = table_weights;
-    }
-
-    EmbeddingBag(uint32_t num_embeddings, uint32_t embedding_dim)
-    {
-        n = num_embeddings;
-        m = embedding_dim;
-        // mode = "";
 
         printf("LS EXT ========= %d %d\n", n, m);
         fflush(stdout);
+    }
 
-        table_weights = new float[m * n * sizeof(float)];
-        weights = table_weights;
+    EmbeddingBag(uint32_t num_embeddings, uint32_t embedding_dim) : EmbeddingBag(num_embeddings, embedding_dim, "sum")
+    {
+        
     }
 
     void setWeights(torch::Tensor inData)
@@ -193,7 +188,7 @@ struct EmbeddingBag
 namespace py = pybind11;
 PYBIND11_MODULE(TORCH_EXTENSION_NAME, m)
 {
-    py::class_<EmbeddingBag>(m, "EmbeddingBag")
+    py::class_<EmbeddingBag>(m, "EmbeddingBag", py::module_local())
         .def(py::init<uint32_t, uint32_t, const std::string &>())
         .def(py::init<uint32_t, uint32_t>())
         .def("setWeights", &EmbeddingBag::setWeights)
