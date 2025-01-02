@@ -90,7 +90,7 @@ Prepare the OpenWebText dataset using the python script in the `LLM/TRAIN/data` 
 Launch Table representation or DHE finetuning in the respective `LLM/TRAIN/nanoGPT_*` folders using the `launch_finetune.sh` script. 
 
 Existing model accuracies can be evaluated using the `launch_eval.sh` script in the same folder. 
-Pretrained Table and DHE models can be downloaded from our Zenodo repository under `DLRM_CONVERTED_MODELS.zip`. The `pt` model files are to be in the proper `LLM/TRAIN/nanoGPT_***/output-model-owt` respectively.
+Pretrained Table and DHE models can be downloaded from our Zenodo repository under `LLM_PRETRAINED_MODELS.zip`. The `pt` model files are to be in the proper `LLM/TRAIN/nanoGPT_***/output-model-owt` respectively.
 The reported train and validation losses can be converted to perplexity values using `exp(loss)`.
 
 The trained models can be prompted for generation using the `launch_sample.sh` script in the same folder.
