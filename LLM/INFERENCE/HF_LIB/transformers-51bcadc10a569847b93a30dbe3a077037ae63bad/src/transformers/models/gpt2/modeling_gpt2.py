@@ -920,17 +920,17 @@ class GPT2Model(GPT2PreTrainedModel):
         self.embed_dim = config.hidden_size
 
         if config.DHE_enabled:
-            print('dhe wte ==========')
+            print('WTE DHE')
             self.wte = DHE_Emb(self.embed_dim, config.DHE_sizes)
         elif config.LS_enabled:
-            print('ls wte ==========')
+            print('WTE LS')
             self.wte = LS_Emb(config.vocab_size, self.embed_dim)
         elif config.ZT_enabled:
-            print('zt wte ==========')
+            print('WTE ZT', config.ZT_type)
             self.wte = ZT_ORAM_Emb(config.vocab_size, self.embed_dim, config.ZT_type)
         else: 
             # default index lookup
-            print('orig wte ==========')
+            print('WTE Index Lookup')
             self.wte = nn.Embedding(config.vocab_size, self.embed_dim)
 
         ##
