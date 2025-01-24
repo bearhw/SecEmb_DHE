@@ -5,20 +5,27 @@
 #include <string>
 #include <chrono>
 
-static inline void add_float32_avx2(float *farr1, float *farr2, int N)
+static inline void add_float32_avx512(float *farr1, float *farr2, int N)
 {
-    uint32_t count = N * sizeof(float) / 32; // 256bits = 32bytes
+    uint32_t count = N * sizeof(float) / 64; //
     for (uint32_t i = 0; i < count; i++)
     {
-        __m256 read1 = _mm256_loadu_ps(farr1 + i * 8); // 32/4=8 floats
-        __m256 read2 = _mm256_loadu_ps(farr2 + i * 8);
-        __m256 res = _mm256_add_ps(read2, read1);
-        _mm256_storeu_ps(farr1 + i * 8, res);
+        __m512 read1 = _mm512_loadu_ps(farr1 + i * 16); // 64/4=16 floats
+        __m512 read2 = _mm512_loadu_ps(farr2 + i * 16);
+        __m512 res = _mm512_add_ps(read2, read1);
+        _mm512_storeu_ps(farr1 + i * 16, res);
+    }
+
+    uint32_t simd_done_elem = count * 16;
+    __mmask16 k = (1 << (N - simd_done_elem)) - 1;
+    if (simd_done_elem < N)
+    {
+        __m512 r1 = _mm512_maskz_loadu_ps(k, farr1 + simd_done_elem);
+        __m512 r2 = _mm512_maskz_loadu_ps(k, farr2 + simd_done_elem);
+        __m512 res = _mm512_add_ps(r1, r2);
+        _mm512_mask_storeu_ps(farr1 + simd_done_elem, k, res);
     }
 }
-
-// ???
-extern "C" void omove_buffer(unsigned char *dest, unsigned char *source, uint32_t buffersize, uint32_t flag);
 
 #include "ZT_header.hpp"
 #include "../ZT_Utils/PathORAM_Enclave.hpp"
@@ -87,7 +94,6 @@ struct EmbeddingBag
 
     EmbeddingBag(uint32_t num_embeddings, uint32_t embedding_dim) : EmbeddingBag(num_embeddings, embedding_dim, "sum")
     {
-        
     }
 
     void setWeights(torch::Tensor inData)
@@ -174,10 +180,10 @@ struct EmbeddingBag
 
         int B = offsets.sizes()[0];
         int IND = indices.sizes()[0];
-        float *output = new float[B * m * sizeof(float)];
+        float *output = (float *)malloc(B * m * sizeof(float));
 
         memset(output, 0, B * m * sizeof(float));
-        float *tmp_out = new float[m * sizeof(float)];
+        float *tmp_out = (float *)malloc(m * sizeof(float));
         for (int i = 0; i < B; i++)
         {
             uint32_t offset_start, offset_end;
@@ -192,7 +198,7 @@ struct EmbeddingBag
                 uint32_t idx = ind_a[ii];
                 serializeRequest(idx, 'r', sample_data_in, 4, serialized_request);
                 ZT_Access(zt_id, ORAM_TYPE, serialized_request, (unsigned char *)tmp_out, request_size, response_size);
-                add_float32_avx2(output + i * m, tmp_out, m);
+                add_float32_avx512(output + i * m, tmp_out, m);
             }
         }
 

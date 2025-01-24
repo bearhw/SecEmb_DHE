@@ -16,9 +16,9 @@ torch.set_printoptions(precision=4,sci_mode=False)
 from EmbeddingBagExt_LinearScan import EmbeddingBag
 
 
-def test_simple():
+def test():
         
-    embsz = 64
+    embsz = 16
     emb_1 = EmbeddingBag(512, embsz)
     
     w = torch.randn((512, embsz))  
@@ -31,12 +31,13 @@ def test_simple():
 
     y = emb_1(indices, offsets)
     
-    print('ext returned ', y)
+    print('extension returned \n', y)
 
     print('\n\n\n')
     print('orig w       ', w[313,:])
     print('orig w       ', w[1,:])
     print('orig w       ', w[511,:])
 
-test_simple()
+
+test()
 

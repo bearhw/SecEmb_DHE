@@ -379,9 +379,9 @@ void LocalStorage::setParams(uint32_t max_blocks,uint32_t set_D, uint32_t set_Z,
       #endif			
 
       inmem_tree_l = (unsigned char**) malloc (sizeof(unsigned char*));
-      inmem_hash_l = (unsigned char**) malloc (sizeof(unsigned char*));
+      // inmem_hash_l = (unsigned char**) malloc (sizeof(unsigned char*));
       inmem_tree_l[0] = (unsigned char *) malloc(datatree_size);
-      inmem_hash_l[0] = (unsigned char *) malloc(hashtree_size);
+      // inmem_hash_l[0] = (unsigned char *) malloc(hashtree_size);
       blocks_in_level = (uint64_t*) malloc((recursion_levels) * sizeof(uint64_t*));
       buckets_in_level = (uint64_t*) malloc((recursion_levels) * sizeof(uint64_t*));
       blocks_in_level[0] = max_blocks;
@@ -477,7 +477,7 @@ void LocalStorage::setParams(uint32_t max_blocks,uint32_t set_D, uint32_t set_Z,
 
           //Setup Memory locations for hashtree and recursion block	
           inmem_tree_l[i] = (unsigned char*) malloc(level_size);
-          printf("LS: level_size: %d, level: %d, blocks: %d\n", level_size, i, blocks_in_level[i]);
+          printf("LS: level_size: %llu, level: %d, blocks: %llu\n", level_size, i, blocks_in_level[i]);
           // printf("TREE: Allocating %d blocks for level %d\n", tree_size, i);
           // inmem_hash_l[i] = (unsigned char*) malloc(hashtree_size);
 

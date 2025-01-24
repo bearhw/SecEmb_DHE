@@ -348,9 +348,7 @@ uint32_t PathORAM::access(uint32_t id, int32_t position_in_id, char opType, uint
       // printf("PAccess Level: %d ID: %d Calling access with id: %d\n", level, id, id_adj);
       leaf = access(id_adj, position_in_id, opType, level-1, data_in, data_out, prev_sampled_leaf);	
       // printf("PAccess Level: %d Fetched leaf: %d\n", level, leaf);
-      if(level==2&&id==47111){
-        printf("In PathORAM::access: ID: %d | leaf: %d\n", id, leaf);
-      }
+      
       #ifdef ACCESS_DEBUG					
         printf("access, Level = %d:  before access_oram_level : Block_id = %d, Newleaf = %d, Leaf from level = %d, Flag = %d\n",level,id,*prev_sampled_leaf,leaf,oblivious_flag);
       #endif

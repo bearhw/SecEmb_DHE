@@ -9,25 +9,34 @@ os.environ["VECLIB_MAXIMUM_THREADS"] = thread_count
 os.environ["NUMEXPR_NUM_THREADS"] = thread_count
 
 
-import time
-
 import torch
 
 torch.set_printoptions(precision=4, sci_mode=False)
-
+ 
 
 import ReLU_Ext
+class EXT_RELU_MOD(torch.nn.Module):
+    def __init__(self):
+        super(EXT_RELU_MOD, self).__init__()
+        pass    
+    def forward(self, x):
+        return ReLU_Ext.forward(x)
+    def string(self):
+        pass
 
-size = 16
-B = 4
+
+modrelu = EXT_RELU_MOD()
+
+size = 1024
+B = 64
 w = torch.randn((B, size))
 print('orig', w)
 
-y = ReLU_Ext.forward(w)
-print("output  ", y, y.shape, y.dtype)
+y = modrelu(w)
+print("ext output  ", y, y.shape, y.dtype)
     
+z = torch.nn.functional.relu(w) 
     
-    
-    
-# Note: Use of internal PyTorch ReLU under AVX-512 is likely equivalent to our custom ReLU as the tensor sizes are well-aligned to 64B.
+diff = torch.sum(torch.abs(y - z))
+print('diff total',diff)    
 

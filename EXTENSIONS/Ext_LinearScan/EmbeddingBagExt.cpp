@@ -39,35 +39,6 @@ static inline void omove_buffer_NEW(unsigned char *dest, unsigned char *source, 
     }
 }
 
-static inline void omove_buffer_avx2(unsigned char *dest, unsigned char *source, uint32_t buffersize, uint32_t flag)
-{
-    // __m256i mask = _mm256_set1_epi64x(flag == 1 ? -1 : 0); // broadcast flag to mask, has condition though
-    __m256i allzero = _mm256_set1_epi64x(0);
-    __m256i flagb = _mm256_set1_epi64x((uint64_t)flag);
-    __m256i mask = _mm256_cmpeq_epi64(allzero, flagb);
-    mask = ~mask;                     // if flag is zero, then cmp-eq sets 0xffff, we need to negate it for blending, HENCE if flag not zero then mask is eventually all ones
-    uint32_t count = buffersize / 32; // 256bits = 32bytes
-    for (uint32_t i = 0; i < count; i++)
-    {
-        __m256i read1 = _mm256_loadu_si256((__m256i const *)source + i);
-        __m256i read2 = _mm256_loadu_si256((__m256i const *)dest + i);
-        __m256i res = _mm256_blendv_epi8(read2, read1, mask); // if flag
-        _mm256_storeu_si256((__m256i *)dest + i, res);
-    }
-}
-
-static inline void add_float32_avx2(float *farr1, float *farr2, int N)
-{
-    uint32_t count = N * sizeof(float) / 32; // 256bits = 32bytes
-    for (uint32_t i = 0; i < count; i++)
-    {
-        __m256 read1 = _mm256_loadu_ps(farr1 + i * 8); // 32/4=8 floats
-        __m256 read2 = _mm256_loadu_ps(farr2 + i * 8);
-        __m256 res = _mm256_add_ps(read2, read1);
-        _mm256_storeu_ps(farr1 + i * 8, res);
-    }
-}
-
 static inline void omove_buffer_avx512(unsigned char *dest, unsigned char *source, uint32_t buffersize, uint32_t flag)
 {
     // __m512i  mask = _mm256_set1_epi64x(flag == 1 ? -1 : 0); // broadcast flag to mask, has condition though
@@ -76,7 +47,12 @@ static inline void omove_buffer_avx512(unsigned char *dest, unsigned char *sourc
     __mmask8 mask = _mm512_cmpeq_epi64_mask(allzero, flagb);
     // printf("flag %d mask %u\n", flag, mask);
     mask = ~mask; // if flag is zero, then cmp-eq sets 0xffff, we need to negate it for blending, HENCE if flag not zero then mask is eventually all ones
-    // printf("mask %u\n", mask);
+    //
+    //
+    //  to-do simplify the logic
+    //
+    //
+
     uint32_t count = buffersize / 64; // 512bits = 64bytes
     for (uint32_t i = 0; i < count; i++)
     {
@@ -84,6 +60,17 @@ static inline void omove_buffer_avx512(unsigned char *dest, unsigned char *sourc
         __m512i read2 = _mm512_loadu_si512((__m512i const *)dest + i);
         __m512i res = _mm512_mask_blend_epi64(mask, read2, read1); // Performs element-by-element blending of int64 source vectors a and b, using the instruction mask k as selector.
         _mm512_storeu_si512((__m512i *)dest + i, res);
+    }
+
+    //// remaining elements using masked loads / stores
+    uint32_t simd_done_elem = count * 64;
+    __mmask64 k = ((uint64_t)1 << (buffersize - simd_done_elem)) - 1;
+    if (simd_done_elem < buffersize)
+    {
+        __m512i r1 = _mm512_maskz_loadu_epi8(k, source + simd_done_elem);
+        __m512i r2 = _mm512_maskz_loadu_epi8(k, dest + simd_done_elem);
+        __m512i res = _mm512_mask_blend_epi64(mask, r2, r1);
+        _mm512_mask_storeu_epi8(dest + simd_done_elem, k, res);
     }
 }
 
@@ -97,6 +84,16 @@ static inline void add_float32_avx512(float *farr1, float *farr2, int N)
         __m512 res = _mm512_add_ps(read2, read1);
         _mm512_storeu_ps(farr1 + i * 16, res);
     }
+
+    uint32_t simd_done_elem = count * 16;
+    __mmask16 k = (1 << (N - simd_done_elem)) - 1;
+    if (simd_done_elem < N)
+    {
+        __m512 r1 = _mm512_maskz_loadu_ps(k, farr1 + simd_done_elem);
+        __m512 r2 = _mm512_maskz_loadu_ps(k, farr2 + simd_done_elem);
+        __m512 res = _mm512_add_ps(r1, r2);
+        _mm512_mask_storeu_ps(farr1 + simd_done_elem, k, res);
+    }
 }
 
 struct EmbeddingBag
@@ -107,7 +104,7 @@ struct EmbeddingBag
         m = embedding_dim;
         mode = mode_;
 
-        table_weights = new float[m * n * sizeof(float)];
+        table_weights = (float *)malloc(m * n * sizeof(float));
         weights = table_weights;
 
         printf("LS EXT ========= %d %d\n", n, m);
@@ -116,7 +113,6 @@ struct EmbeddingBag
 
     EmbeddingBag(uint32_t num_embeddings, uint32_t embedding_dim) : EmbeddingBag(num_embeddings, embedding_dim, "sum")
     {
-        
     }
 
     void setWeights(torch::Tensor inData)
@@ -139,17 +135,16 @@ struct EmbeddingBag
         int B = offsets.sizes()[0];
         int IND = indices.sizes()[0];
 
-        float *output = new float[B * m * sizeof(float)];
+        float *output = (float *)malloc(B * m * sizeof(float));
         memset(output, 0, B * m * sizeof(float));
 
         float *tmp_out;
 
 #pragma omp parallel private(tmp_out)
         {
-            tmp_out = new float[m * sizeof(float)];
+            tmp_out = (float *)malloc(m * sizeof(float));
 
 #pragma omp for
-            // #pragma omp parallel for
             for (int i = 0; i < B; i++)
             {
                 uint32_t offset_start, offset_end;
@@ -193,6 +188,5 @@ PYBIND11_MODULE(TORCH_EXTENSION_NAME, m)
         .def(py::init<uint32_t, uint32_t>())
         .def("setWeights", &EmbeddingBag::setWeights)
         .def("forward", &EmbeddingBag::forward)
-        .def("__call__", &EmbeddingBag::forward)
-        ;
+        .def("__call__", &EmbeddingBag::forward);
 }

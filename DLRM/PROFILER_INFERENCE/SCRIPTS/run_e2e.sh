@@ -1,6 +1,8 @@
 
 conda activate pyth310
 
+mkdir RESULTS_OUTPUT
+
 
 cmd="gramine-sgx  ./pytorch" # SGX
 cmd="python" # not SGX
@@ -54,16 +56,16 @@ do
     for threshold in 2000 3000 5000 5670 10000     14991 93144 120000      150000   # kaggle e16                              
     do
 
-        CUSTOM_THREAD_COUNT=$t  taskset -c $core-$(( $core+$t-1 ))   $cmd  run_hybrid_kaggle.py --inference --device 'cpu'   --table-size-threshold=$threshold      | tee RESULTS_OUTPUT/output_kaggle_hybrid_threshold$threshold\_threads_$t.log      
-        CUSTOM_THREAD_COUNT=$t  taskset -c $core-$(( $core+$t-1 ))   $cmd  run_hybrid_kaggle.py --inference --device 'cpu'   --table-size-threshold=$threshold  --dhe-varying   | tee RESULTS_OUTPUT/output_kaggle_hybrid_varying_threshold$threshold\_threads_$t.log      
+        CUSTOM_THREAD_COUNT=$t  taskset -c $core-$(( $core+$t-1 ))   $cmd  run_hybrid_kaggle.py --inference --device 'cpu'   --table-size-threshold=$threshold                   2>&1  | tee RESULTS_OUTPUT/output_kaggle_hybrid_threshold$threshold\_threads_$t.log      
+        CUSTOM_THREAD_COUNT=$t  taskset -c $core-$(( $core+$t-1 ))   $cmd  run_hybrid_kaggle.py --inference --device 'cpu'   --table-size-threshold=$threshold  --dhe-varying    2>&1  | tee RESULTS_OUTPUT/output_kaggle_hybrid_varying_threshold$threshold\_threads_$t.log      
     
     done
     
     for threshold in 120 500 1000 2000   5000   7111 7377 11155 12419 17216 20133 28000           # tera e64      
     do
 
-        CUSTOM_THREAD_COUNT=$t  taskset -c $core-$(( $core+$t-1 ))  $cmd  run_hybrid_tera.py --inference --device 'cpu'   --table-size-threshold=$threshold      | tee RESULTS_OUTPUT/output_tera_hybrid_threshold$threshold\_threads_$t.log      
-        CUSTOM_THREAD_COUNT=$t  taskset -c $core-$(( $core+$t-1 ))  $cmd  run_hybrid_tera.py --inference --device 'cpu'   --table-size-threshold=$threshold  --dhe-varying     | tee RESULTS_OUTPUT/output_tera_hybrid_varying_threshold$threshold\_threads_$t.log      
+        CUSTOM_THREAD_COUNT=$t  taskset -c $core-$(( $core+$t-1 ))  $cmd  run_hybrid_tera.py --inference --device 'cpu'   --table-size-threshold=$threshold                     2>&1  | tee RESULTS_OUTPUT/output_tera_hybrid_threshold$threshold\_threads_$t.log      
+        CUSTOM_THREAD_COUNT=$t  taskset -c $core-$(( $core+$t-1 ))  $cmd  run_hybrid_tera.py --inference --device 'cpu'   --table-size-threshold=$threshold  --dhe-varying      2>&1  | tee RESULTS_OUTPUT/output_tera_hybrid_varying_threshold$threshold\_threads_$t.log      
     
     done
 done

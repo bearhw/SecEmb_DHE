@@ -91,36 +91,42 @@ class DLRM(nn.Module):
                 
                 import EmbeddingBagExt_LinearScan
                 table = EmbeddingBagExt_LinearScan.EmbeddingBag(size, emb_dim, 'sum')            
-                w = ra.uniform(
-                    low  = -np.sqrt(1/size),
-                    high = np.sqrt(1/size),
-                    size = (size, emb_dim)
-                ).astype(precision)               
-                table.setWeights(   torch.tensor(w)  )        
-                embedding_tables.append(table)
-
-            elif ext_type == 'zt_po':
-                
-                import EmbeddingBagExt_ZT_CORAM
-                table = EmbeddingBagExt_ZT_CORAM.EmbeddingBag(size, emb_dim, 'sum')            
-                w = ra.uniform(
-                    low  = -np.sqrt(1/size),
-                    high = np.sqrt(1/size),
-                    size = (size, emb_dim)
-                ).astype(precision)               
-                table.setWeights(   torch.tensor(w)  )        
+                # w = ra.uniform(
+                #     low  = -np.sqrt(1/size),
+                #     high = np.sqrt(1/size),
+                #     size = (size, emb_dim)
+                # ).astype(precision)               
+                # table.setWeights(   torch.tensor(w)  )        
+                w = torch.rand((size, emb_dim), dtype=torch.float32)
+                table.setWeights(   w  )        
                 embedding_tables.append(table)
 
             elif ext_type == 'zt_co':
                 
+                import EmbeddingBagExt_ZT_CORAM
+                table = EmbeddingBagExt_ZT_CORAM.EmbeddingBag(size, emb_dim, 'sum')            
+                # w = ra.uniform(
+                #     low  = -np.sqrt(1/size),
+                #     high = np.sqrt(1/size),
+                #     size = (size, emb_dim)
+                # ).astype(precision)               
+                # table.setWeights(   torch.tensor(w)  )         
+                w = torch.rand((size, emb_dim), dtype=torch.float32)
+                table.setWeights(   w  )        
+                embedding_tables.append(table)
+
+            elif ext_type == 'zt_po':
+                
                 import EmbeddingBagExt_ZT_PORAM
                 table = EmbeddingBagExt_ZT_PORAM.EmbeddingBag(size, emb_dim, 'sum')            
-                w = ra.uniform(
-                    low  = -np.sqrt(1/size),
-                    high = np.sqrt(1/size),
-                    size = (size, emb_dim)
-                ).astype(precision)               
-                table.setWeights(   torch.tensor(w)  )        
+                # w = ra.uniform(
+                #     low  = -np.sqrt(1/size),
+                #     high = np.sqrt(1/size),
+                #     size = (size, emb_dim)
+                # ).astype(precision)               
+                # table.setWeights(   torch.tensor(w)  )         
+                w = torch.rand((size, emb_dim), dtype=torch.float32)
+                table.setWeights(   w  )        
                 embedding_tables.append(table)
 
 

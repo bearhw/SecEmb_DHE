@@ -132,5 +132,5 @@ $(App_Name): $(Util_Cpp_Objects) $(Util_Asm_Objects)
 .PHONY: clean
 
 clean:
-	@rm -f .config_* $(App_Name) $(Enclave_Name) $(App_Cpp_Objects) $(Util_Cpp_Objects) Sample_App/libZT.so Sample_App/lsclient Sample_App/sampleapp Sample_App/testcorrectness libZT.so
+	@rm -f .config_* $(App_Name) $(Enclave_Name) $(App_Cpp_Objects) $(Util_Cpp_Objects) $(Util_Asm_Objects) Sample_App/libZT.so Sample_App/lsclient Sample_App/sampleapp Sample_App/testcorrectness libZT.so
 

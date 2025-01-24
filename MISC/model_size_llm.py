@@ -1,24 +1,8 @@
 
-########## LLM
-# model + DHE + Table/Head
-
-def parse_dims(dims):
-    dims_parsed = [int(i) for i in dims.split('-')]
-    return dims_parsed
+from utils import *
 
 
-def get_mlp_size(mlp_dims):    
-    bytes_per_param = 4
-    mlp_size = 0
-    for i in range(len(mlp_dims) - 1):
-        dim_in  = int(mlp_dims[i])
-        dim_out = int(mlp_dims[i + 1])            
-        mlp_size  += (dim_in + 1) * dim_out * bytes_per_param
-    return mlp_size
-    
-# MB_factor = 1e6
-MB_factor = 1048576
-
+#### LLM
 
 model_name = 'GPT-2 Medium'
 gpt2_medium_param_count = 354823168
@@ -46,9 +30,16 @@ dhe_encoder_size = 4 * dheK * table_count * bytes_per_param        # a/b/m/p
 dhe_decoder_size = get_mlp_size(parse_dims(dhe_mlp_dims)) * table_count
 
 
+emb_table_oram_size = get_embedding_size_table_oram(embSize, [tableSize])
+
+
+
 
 print('Model:',model_name)
 print('Original Model Size:',(gpt2_medium_model_size)/MB_factor,' MB')
 print('Original Table Size:',(emb_table_size)/MB_factor,' MB')
-print('DHE layer overhead:',(dhe_encoder_size+dhe_decoder_size)/MB_factor,' MB')
+print('DHE Layer Size:',(dhe_encoder_size+dhe_decoder_size)/MB_factor,' MB')
+print('Table-ORAM Size:',(emb_table_oram_size)/MB_factor,' MB')
+
+
 

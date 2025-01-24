@@ -1,6 +1,8 @@
 
 conda activate pyth310
 
+mkdir RESULTS_OUTPUT
+
 
 cmd="gramine-sgx  ./pytorch" # SGX
 cmd="python" # not SGX
@@ -22,8 +24,8 @@ do
     do
       echo "Table Size $i "
 
-          CUSTOM_THREAD_COUNT=$t   TABLE_SIZE_ROWS=$i   taskset -c $core-$(( $core+$t-1 ))    $cmd   run_dlrm_e64.py --inference --device 'cpu'        | tee RESULTS_OUTPUT/output_dlrm_e64__threads_$t\_tableSize_$i.log
-          CUSTOM_THREAD_COUNT=$t   TABLE_SIZE_ROWS=$i   taskset -c $core-$(( $core+$t-1 ))    $cmd   run_dlrm_e16.py --inference --device 'cpu'        | tee RESULTS_OUTPUT/output_dlrm_e16__threads_$t\_tableSize_$i.log
+          CUSTOM_THREAD_COUNT=$t   TABLE_SIZE_ROWS=$i   taskset -c $core-$(( $core+$t-1 ))    $cmd   run_dlrm_e64.py --inference --device 'cpu'      2>&1    | tee RESULTS_OUTPUT/output_dlrm_e64__threads_$t\_tableSize_$i.log
+          CUSTOM_THREAD_COUNT=$t   TABLE_SIZE_ROWS=$i   taskset -c $core-$(( $core+$t-1 ))    $cmd   run_dlrm_e16.py --inference --device 'cpu'      2>&1    | tee RESULTS_OUTPUT/output_dlrm_e16__threads_$t\_tableSize_$i.log
 
     done
 
@@ -42,13 +44,13 @@ do
 
     ## DHE uniform
 
-    CUSTOM_THREAD_COUNT=$t  taskset -c $core-$(( $core+$t-1 ))  $cmd run_dhe_e64.py --inference --device 'cpu'        | tee RESULTS_OUTPUT/output_dhe_e64__threads_$t.log        
-    CUSTOM_THREAD_COUNT=$t  taskset -c $core-$(( $core+$t-1 ))  $cmd run_dhe_e16.py --inference --device 'cpu'        | tee RESULTS_OUTPUT/output_dhe_e16__threads_$t.log        
+    CUSTOM_THREAD_COUNT=$t  taskset -c $core-$(( $core+$t-1 ))  $cmd run_dhe_e64.py --inference --device 'cpu'     2>&1     | tee RESULTS_OUTPUT/output_dhe_e64__threads_$t.log        
+    CUSTOM_THREAD_COUNT=$t  taskset -c $core-$(( $core+$t-1 ))  $cmd run_dhe_e16.py --inference --device 'cpu'     2>&1     | tee RESULTS_OUTPUT/output_dhe_e16__threads_$t.log        
 
     ## DHE varying
 
-    CUSTOM_THREAD_COUNT=$t  taskset -c $core-$(( $core+$t-1 ))  $cmd run_dhe_e64_varying.py --inference --device 'cpu'        | tee RESULTS_OUTPUT/output_dhe_e64_varying__threads_$t.log        
-    CUSTOM_THREAD_COUNT=$t  taskset -c $core-$(( $core+$t-1 ))  $cmd run_dhe_e16_varying.py --inference --device 'cpu'        | tee RESULTS_OUTPUT/output_dhe_e16_varying__threads_$t.log        
+    CUSTOM_THREAD_COUNT=$t  taskset -c $core-$(( $core+$t-1 ))  $cmd run_dhe_e64_varying.py --inference --device 'cpu'     2>&1     | tee RESULTS_OUTPUT/output_dhe_e64_varying__threads_$t.log        
+    CUSTOM_THREAD_COUNT=$t  taskset -c $core-$(( $core+$t-1 ))  $cmd run_dhe_e16_varying.py --inference --device 'cpu'     2>&1     | tee RESULTS_OUTPUT/output_dhe_e16_varying__threads_$t.log        
 
 done 
 
@@ -69,8 +71,8 @@ do
     do
       echo "Table Size $i "
 
-          CUSTOM_THREAD_COUNT=$t   TABLE_SIZE_ROWS=$i   taskset -c $core-$(( $core+$t-1 ))        $cmd   run_dlrmExt_e64.py --inference --device 'cpu'   --ext-type 'linearscan'     | tee RESULTS_OUTPUT/output_dlrmExt_e64_ls__threads_$t\_tableSize_$i.log
-          CUSTOM_THREAD_COUNT=$t   TABLE_SIZE_ROWS=$i   taskset -c $core-$(( $core+$t-1 ))        $cmd   run_dlrmExt_e16.py --inference --device 'cpu'   --ext-type 'linearscan'     | tee RESULTS_OUTPUT/output_dlrmExt_e16_ls__threads_$t\_tableSize_$i.log
+          CUSTOM_THREAD_COUNT=$t   TABLE_SIZE_ROWS=$i   taskset -c $core-$(( $core+$t-1 ))        $cmd   run_dlrmExt_e64.py --inference --device 'cpu'   --ext-type 'linearscan'    2>&1  | tee RESULTS_OUTPUT/output_dlrmExt_e64_ls__threads_$t\_tableSize_$i.log
+          CUSTOM_THREAD_COUNT=$t   TABLE_SIZE_ROWS=$i   taskset -c $core-$(( $core+$t-1 ))        $cmd   run_dlrmExt_e16.py --inference --device 'cpu'   --ext-type 'linearscan'    2>&1  | tee RESULTS_OUTPUT/output_dlrmExt_e16_ls__threads_$t\_tableSize_$i.log
 
     done
 
@@ -92,11 +94,11 @@ do
     do
       echo "Table Size $i "
 
-        CUSTOM_THREAD_COUNT=1    TABLE_SIZE_ROWS=$i  taskset -c $core-$(( $core+$t-1 ))       $cmd   run_dlrmExt_e64.py --inference --device 'cpu'   --ext-type 'zt_co'     | tee RESULTS_OUTPUT/output_dlrmExt_e64_ztco__tableSize_$i.log
-        CUSTOM_THREAD_COUNT=1    TABLE_SIZE_ROWS=$i  taskset -c $core-$(( $core+$t-1 ))       $cmd   run_dlrmExt_e64.py --inference --device 'cpu'   --ext-type 'zt_po'     | tee RESULTS_OUTPUT/output_dlrmExt_e64_ztpo__tableSize_$i.log  
+        CUSTOM_THREAD_COUNT=1    TABLE_SIZE_ROWS=$i  taskset -c $core-$(( $core+$t-1 ))       $cmd   run_dlrmExt_e64.py --inference --device 'cpu'   --ext-type 'zt_co'    2>&1   | tee RESULTS_OUTPUT/output_dlrmExt_e64_ztco__tableSize_$i.log
+        CUSTOM_THREAD_COUNT=1    TABLE_SIZE_ROWS=$i  taskset -c $core-$(( $core+$t-1 ))       $cmd   run_dlrmExt_e64.py --inference --device 'cpu'   --ext-type 'zt_po'    2>&1   | tee RESULTS_OUTPUT/output_dlrmExt_e64_ztpo__tableSize_$i.log  
 
-        CUSTOM_THREAD_COUNT=1    TABLE_SIZE_ROWS=$i  taskset -c $core-$(( $core+$t-1 ))       $cmd   run_dlrmExt_e16.py --inference --device 'cpu'   --ext-type 'zt_co'     | tee RESULTS_OUTPUT/output_dlrmExt_e16_ztco__tableSize_$i.log
-        CUSTOM_THREAD_COUNT=1    TABLE_SIZE_ROWS=$i  taskset -c $core-$(( $core+$t-1 ))       $cmd   run_dlrmExt_e16.py --inference --device 'cpu'   --ext-type 'zt_po'     | tee RESULTS_OUTPUT/output_dlrmExt_e16_ztpo__tableSize_$i.log  
+        CUSTOM_THREAD_COUNT=1    TABLE_SIZE_ROWS=$i  taskset -c $core-$(( $core+$t-1 ))       $cmd   run_dlrmExt_e16.py --inference --device 'cpu'   --ext-type 'zt_co'    2>&1   | tee RESULTS_OUTPUT/output_dlrmExt_e16_ztco__tableSize_$i.log
+        CUSTOM_THREAD_COUNT=1    TABLE_SIZE_ROWS=$i  taskset -c $core-$(( $core+$t-1 ))       $cmd   run_dlrmExt_e16.py --inference --device 'cpu'   --ext-type 'zt_po'    2>&1   | tee RESULTS_OUTPUT/output_dlrmExt_e16_ztpo__tableSize_$i.log  
 
     done
 

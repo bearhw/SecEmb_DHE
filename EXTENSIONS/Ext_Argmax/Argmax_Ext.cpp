@@ -39,7 +39,7 @@ torch::Tensor Argmax_forward(torch::Tensor input_tensor)
     int B = input_tensor.sizes()[0];
     int L = input_tensor.sizes()[1];
 
-    uint64_t *output = new uint64_t[B * sizeof(uint64_t)];
+    uint64_t *output = (uint64_t *)malloc(B * sizeof(uint64_t));
 
     // TODO    THREAD     // # ,'-DAT_PARALLEL_OPENMP', '-fopenmp']),
 

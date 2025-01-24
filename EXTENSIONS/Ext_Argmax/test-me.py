@@ -9,8 +9,6 @@ os.environ["VECLIB_MAXIMUM_THREADS"] = thread_count
 os.environ["NUMEXPR_NUM_THREADS"] = thread_count
 
 
-import time
-
 import torch
 
 torch.set_printoptions(precision=4, sci_mode=False)
@@ -21,7 +19,7 @@ import Argmax_Ext
 
 
 
-def test_new():
+def test():
         
     B = 3
     size = 50257
@@ -35,4 +33,5 @@ def test_new():
     print('baseline out  ', z, z.shape, z.dtype)
 
 
-test_new()
+test()
+

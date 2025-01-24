@@ -9,3 +9,6 @@ setup(
     cmdclass={
         'build_ext': BuildExtension
     })
+
+# FLAG_RELU_OBLIVIOUS
+# FLAG_RELU_NONSECURE

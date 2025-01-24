@@ -29,6 +29,7 @@ Also install the assembler `conda install anaconda::nasm` and `libssl-dev` or eq
 
 Before running experiments, install our custom-implemented PyTorch extensions in the `EXTENSIONS` folder.
 First, inside the dir `EXTENSIONS/Ext_ORAM/ZT_Clean`, run `make` and build our modified ZeroTrace.
+The recursion parameters are given on line 31 in `EXTENSIONS/Ext_ORAM/ZT_Clean/ZT_Utils/CONFIG.h`.
 Then inside each sub-folder `EXTENSIONS/Ext_*`, run `source cmd-setup.sh` to install the extensions (into the conda environment).
 Note: where the `ZT_Clean` ZeroTrace is built, the absolute fixed paths to ZT_Clean need to be edit in `EXTENSIONS/Ext_ORAM/Ext_PyTorch/setup.py`, and also in all instances of `pytorch.manifest.template` in the repository.
 
